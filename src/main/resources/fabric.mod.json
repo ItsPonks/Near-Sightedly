@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "nearsightedly",
+	"version": "${version}",
+
+	"name": "Near-Sightedly",
+	"description": "Extremely simple mod that automatically adjusts the client's render distance to match the server's view distance.",
+	"authors": [
+		"ItsPonks"
+	],
+	"contact": {
+		"homepage": "https://curseforge.com/minecraft/mc-mods/near-sightedly",
+		"issues": "https://github.com/ItsPonks/near-sightedly/issues",
+		"sources": "https://github.com/ItsPonks/near-sightedly"
+	},
+
+	"license": "MIT",
+	"icon": "assets/nearsightedly/icon.png",
+
+	"environment": "client",
+	"mixins": [
+		"nearsightedly.mixins.json"
+	]
+}
