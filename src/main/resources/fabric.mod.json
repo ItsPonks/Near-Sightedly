@@ -18,6 +18,14 @@
 	"icon": "assets/nearsightedly/icon.png",
 
 	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"its.ponks.nearsightedly.NearSightedly"
+		],
+		"modmenu": [
+	        "its.ponks.nearsightedly.NSConfig"
+	    ]
+	},
 	"mixins": [
 		"nearsightedly.mixins.json"
 	]
