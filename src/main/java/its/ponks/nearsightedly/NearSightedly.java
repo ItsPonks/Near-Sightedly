@@ -1,7 +1,5 @@
 package its.ponks.nearsightedly;
 
-import java.util.Objects;
-
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,8 +12,10 @@ public class NearSightedly implements ClientModInitializer {
 		AutoConfig.register(NSConfig.class, GsonConfigSerializer::new);
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-			NSConfig.min = Objects.requireNonNullElse(NSConfig.min, NSConfig.MIN);
-			NSConfig.max = Objects.requireNonNullElseGet(NSConfig.max, Option.RENDER_DISTANCE::getMax);
+			if (NSConfig.min == 0)
+				NSConfig.min = Option.RENDER_DISTANCE.getMin();
+			if (NSConfig.max == 0)
+				NSConfig.max = Option.RENDER_DISTANCE.getMax();
 		});
 	}
 }
