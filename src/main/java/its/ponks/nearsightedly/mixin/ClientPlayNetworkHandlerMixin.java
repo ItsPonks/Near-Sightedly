@@ -30,6 +30,7 @@ public class ClientPlayNetworkHandlerMixin {
 			if (current != previous) {
 				System.out.println("Resetting render distance from " + current + " to " + previous + "...");
 				Option.RENDER_DISTANCE.set(client.options, previous);
+				client.options.write();
 			}
 
 			previous = 0;
