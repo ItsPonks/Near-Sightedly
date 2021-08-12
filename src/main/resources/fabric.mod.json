@@ -23,7 +23,7 @@
 			"its.ponks.nearsightedly.NearSightedly"
 		],
 		"modmenu": [
-	        "its.ponks.nearsightedly.NSConfig"
+	        "its.ponks.nearsightedly.NSModMenuApiImpl"
 	    ]
 	},
 	"mixins": [
