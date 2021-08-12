@@ -17,8 +17,9 @@ import net.minecraft.util.math.MathHelper;
 public class ClientPlayNetworkHandlerMixin {
 	@Shadow
 	private int chunkLoadDistance;
-	@Shadow
+
 	@Final
+	@Shadow
 	private MinecraftClient client;
 	private double previous;
 
@@ -38,15 +39,16 @@ public class ClientPlayNetworkHandlerMixin {
 	@Inject(at = @At("TAIL"), method = { "onGameJoin", "onChunkLoadDistance" })
 	private void onGameJoinAndChunkLoadDistance(@SuppressWarnings("unused") CallbackInfo info) {
 		if (!client.isInSingleplayer()) {
+			var min = Option.RENDER_DISTANCE.getMin();
 			var max = Option.RENDER_DISTANCE.getMax();
-			NSConfig.min = MathHelper.clamp(NSConfig.min, NSConfig.MIN, max);
-			NSConfig.max = MathHelper.clamp(NSConfig.max, NSConfig.MIN, max);
+			NSConfig.min = MathHelper.clamp(NSConfig.min, min, max);
+			NSConfig.max = MathHelper.clamp(NSConfig.max, min, max);
 
 			// For all those users who get min and max mixed up when configuring.
 			if (NSConfig.min > NSConfig.max) {
-				max = NSConfig.max;
-				NSConfig.max = NSConfig.min;
-				NSConfig.min = NSConfig.max;
+				NSConfig.min -= NSConfig.max;
+				NSConfig.max += NSConfig.min;
+				NSConfig.min = NSConfig.max - NSConfig.min;
 			}
 
 			var current = Option.RENDER_DISTANCE.get(client.options);
