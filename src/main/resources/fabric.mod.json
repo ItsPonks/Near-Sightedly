@@ -28,5 +28,13 @@
 	},
 	"mixins": [
 		"nearsightedly.mixins.json"
-	]
+	],
+	
+	"depends": {
+		"fabric": "*"
+	},
+	"suggests": {
+		"cloth-config2": "*",
+		"modmenu": "*"
+	}
 }
