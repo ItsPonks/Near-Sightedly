@@ -20,10 +20,10 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"its.ponks.nearsightedly.NearSightedly"
+			"its.ponks.nearsightedly.client.NearSightedly"
 		],
 		"modmenu": [
-	        "its.ponks.nearsightedly.NSModMenuApiImpl"
+	        "its.ponks.nearsightedly.client.integration.NSModMenuApiImpl"
 	    ]
 	},
 	"mixins": [
