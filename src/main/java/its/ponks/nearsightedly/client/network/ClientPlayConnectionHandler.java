@@ -11,13 +11,14 @@ public class ClientPlayConnectionHandler {
 
 	public static void init() {
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			if (!client.isInSingleplayer()) {
+			if (previous != 0 && !client.isInSingleplayer()) {
 				final var current = (int) Option.RENDER_DISTANCE.get(client.options);
 				if (current != previous) {
 					System.out.println("Resetting render distance from " + current + " to " + previous + "...");
 					Option.RENDER_DISTANCE.set(client.options, previous);
 					client.options.write();
 				}
+				previous = 0;
 			}
 		});
 
@@ -34,7 +35,7 @@ public class ClientPlayConnectionHandler {
 					min ^= max;
 				}
 
-				final var current = (int) Option.RENDER_DISTANCE.get(client.options);
+				final var current = previous = (int) Option.RENDER_DISTANCE.get(client.options);
 				final var value = MathHelper.clamp(((ClientPlayNetworkHandlerMixin) handler).getChunkLoadDistance() + 1,
 						min, max);
 				if (current != value) {
