@@ -27,7 +27,7 @@
 	    ]
 	},
 	"mixins": [
-		"nearsightedly.mixins.json"
+		"nearsightedly.client.network.mixins.json"
 	],
 	
 	"depends": {
