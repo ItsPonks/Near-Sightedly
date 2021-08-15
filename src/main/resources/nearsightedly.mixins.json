@@ -1,5 +1,5 @@
 {
-	"package": "its.ponks.nearsightedly.mixin",
+	"package": "its.ponks.nearsightedly.client.network.mixin",
 	"compatibilityLevel": "JAVA_16",
 	"client": [
 		"ClientPlayNetworkHandlerMixin"
