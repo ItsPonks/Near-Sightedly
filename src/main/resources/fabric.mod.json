@@ -30,9 +30,6 @@
 		"nearsightedly.client.network.mixins.json"
 	],
 	
-	"depends": {
-		"fabric": "*"
-	},
 	"suggests": {
 		"cloth-config2": "*",
 		"modmenu": "*"
