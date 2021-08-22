@@ -4,15 +4,12 @@ import its.ponks.nearsightedly.client.integration.NSConfig;
 import net.fabricmc.api.ClientModInitializer;
 
 /**
- * TODO
- *
- * @since 1.1.0
+ * The client-side entry point for this mod.
  */
 public class NearSightedly implements ClientModInitializer {
 	/**
-	 * TODO
-	 *
-	 * @since 1.1.0
+	 * Invokes relevant methods to initialize this mod on the client. Currently only
+	 * invokes {@link NSConfig#init}.
 	 */
 	@Override
 	public void onInitializeClient() {

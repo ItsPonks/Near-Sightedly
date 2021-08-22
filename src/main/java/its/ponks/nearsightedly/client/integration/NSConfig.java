@@ -8,9 +8,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 /**
- * TODO
- *
- * @since 1.1.0
+ * The configuration file for this mod. {@link AutoConfig} is used for handling
+ * implementation details.
  */
 @Config(name = "nearsightedly")
 public class NSConfig implements ConfigData {
@@ -18,11 +17,9 @@ public class NSConfig implements ConfigData {
 	public static NSConfig instance;
 
 	/**
-	 * Initializes values for the class. This method registers the class using
-	 * {@linkplain AutoConfig} and stores the resulting {@linkplain #instance} for
-	 * accessing config values.
-	 *
-	 * @since 1.1.0
+	 * Initializes values for this {@code class} and registers it with
+	 * {@link AutoConfig}. The resulting instance is stored for accessing
+	 * configuration values.
 	 */
 	public static void init() {
 		instance = AutoConfig.register(NSConfig.class, GsonConfigSerializer::new).getConfig();

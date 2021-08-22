@@ -1,24 +1,18 @@
 package its.ponks.nearsightedly.client.integration;
 
-import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.client.gui.screen.Screen;
 
 /**
- * TODO
- *
- * @since 1.1.0
+ * The implementation of {@link ModMenuApi} for this mod.
  */
 public class NSModMenuApiImpl implements ModMenuApi {
 	/**
-	 * Creates the {@linkplain ConfigScreenFactory} needed for {@linkplain ModMenu}.
-	 * This method uses {@linkplain AutoConfig} to construct the default
-	 * {@linkplain Screen} from {@linkplain NSConfig}.
-	 *
-	 * @since 1.1.0
+	 * Creates the {@link ConfigScreenFactory} needed for a GUI configuration. Uses
+	 * {@link AutoConfig} to construct a default {@code Screen} implementation for
+	 * {@linkplain NSConfig}.
 	 */
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {

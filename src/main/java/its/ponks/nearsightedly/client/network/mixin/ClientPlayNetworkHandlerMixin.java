@@ -3,11 +3,9 @@ package its.ponks.nearsightedly.client.network.mixin;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.points.BeforeReturn;
 
 import its.ponks.nearsightedly.client.integration.NSConfig;
 import net.minecraft.client.MinecraftClient;
@@ -17,11 +15,7 @@ import net.minecraft.client.option.Option;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * The class {@code ClientPlayNetworkHandlerMixin} contains the
- * {@linkplain Mixin}s used by this mod on
- * {@linkplain ClientPlayNetworkHandler}.
- *
- * @since 1.0.0
+ * The {@link ClientPlayNetworkHandler} {@code Mixin} for this mod.
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
@@ -33,30 +27,19 @@ public class ClientPlayNetworkHandlerMixin {
 	private int previous;
 
 	/**
-	 * Injects into the {@linkplain BeforeReturn RETURN} of
-	 * {@linkplain ClientPlayNetworkHandler#clearWorld clearWorld} in
-	 * {@linkplain ClientPlayNetworkHandler}.
-	 *
+	 * Injects into the {@code RETURN} of {@link ClientPlayNetworkHandler#clearWorld
+	 * clearWorld}.
 	 * <p>
-	 * Handles resetting {@linkplain Option#RENDER_DISTANCE RENDER_DISTANCE} to its
-	 * value before {@linkplain #onGameJoin} was invoked, if needed. Nothing is done
-	 * if the {@linkplain #previous} value of {@linkplain Option#RENDER_DISTANCE
-	 * RENDER_DISTANCE} was never initialized, the
-	 * {@linkplain MinecraftClient#isInSingleplayer}, or the current value of
-	 * {@linkplain Option#RENDER_DISTANCE RENDER_DISTANCE} is equal to the
-	 * {@linkplain #previous} value.
-	 * </p>
-	 *
+	 * Handles resetting {@link Option#RENDER_DISTANCE} to its value before
+	 * {@link ClientPlayNetworkHandler#onGameJoin onGameJoin} was invoked, if
+	 * needed. Nothing is done if {@code previous} is uninitialized, the client is
+	 * in singleplayer, or {@code RENDER_DISTANCE} is equal to {@code previous}.
 	 * <p>
-	 * If the {@linkplain Option#RENDER_DISTANCE RENDER_DISTANCE} is changed, the
-	 * {@linkplain MinecraftClient#options} are {@linkplain GameOptions#write
-	 * written} to disk. Even if the current value of
-	 * {@linkplain Option#RENDER_DISTANCE RENDER_DISTANCE} is equal to the
-	 * {@linkplain previous} value, {@linkplain previous} is reset to 0.
-	 * </p>
+	 * If {@code RENDER_DISTANCE} is modified, the changes are
+	 * {@link GameOptions#write written} to disk. {@code previous} is reset to 0
+	 * regardless of whether {@code RENDER_DISTANCE} is equal to {@code previous}.
 	 *
-	 * @param info The {@linkplain CallbackInfo} required by {@linkplain Inject}
-	 * @since 1.0.0
+	 * @param info The unused {@linkplain CallbackInfo} required for injects
 	 */
 	@Inject(at = @At("RETURN"), method = "clearWorld")
 	private void clearWorld(@SuppressWarnings("unused") final CallbackInfo info) {
@@ -73,32 +56,49 @@ public class ClientPlayNetworkHandlerMixin {
 	}
 
 	/**
-	 * Injects into the {@linkplain BeforeReturn RETURN} of
+	 * Injects into the {@code RETURN} of
 	 * {@linkplain ClientPlayNetworkHandler#onChunkLoadDistance onChunkLoadDistance}
-	 * and {@linkplain ClientPlayNetworkHandler#onGameJoin onGameJoin} in
-	 * {@linkplain ClientPlayNetworkHandler}.
-	 *
+	 * and {@linkplain ClientPlayNetworkHandler#onGameJoin onGameJoin}.
 	 * <p>
-	 * TODO
-	 * </p>
+	 * Handles syncing the client's {@linkplain Option#RENDER_DISTANCE
+	 * RENDER_DISTANCE} to the server's view distance, if needed. Nothing is done if
+	 * the client is in singleplayer or {@code RENDER_DISTANCE} is equal to the new
+	 * value.
+	 * <p>
+	 * The {@code min} and {@code max} bounds of {@code RENDER_DISTANCE} are used to
+	 * clamp {@link NSConfig#min} and {@linkplain NSConfig#max}. If the resulting
+	 * {@code min} is greater than the resulting {@code max}, their values are
+	 * swapped. Lastly, {@code RENDER_DISTANCE} is compared to
+	 * {@code chunkLoadDistance + 1}, clamped by {@code min} and {@code max}.
+	 * {@code previous} is initialized to {@code RENDER_DISTANCE} if it is currently
+	 * uninitialized.
 	 *
-	 * @implNote Both methods are {@linkplain Inject}ed here instead of using the
-	 *           Fabric API listener for
-	 *           {@linkplain ClientPlayNetworkHandler#onGameJoin onGameJoin} to
-	 *           reduce code complexity. Since
-	 *           {@linkplain ClientPlayNetworkHandler#onChunkLoadDistance
-	 *           onChunkLoadDistance} does not have a Fabric API listener, this
-	 *           class would still be necessary. Unfortunately, public fields and
-	 *           methods are disallowed in {@linkplain Mixin} classes, so the
-	 *           listener would need to be registered elsewhere. As well, an
-	 *           {@linkplain Accessor} and its containing interface must be created
-	 *           to get the value of {@linkplain #chunkLoadDistance} in the
-	 *           listener. Lastly, this method's body would be moved to a helper
-	 *           method to be invoked from multiple classes. Basically, it is
-	 *           significantly more complicated using listeners in this case.
-	 *
-	 * @param info The {@linkplain CallbackInfo} required by {@linkplain Inject}
-	 * @since 1.2.0
+	 * @param info The unused {@linkplain CallbackInfo} required for injects
+	 * @see <a href=
+	 *      "https://minecraft.fandom.com/wiki/Chunk#Ticket_types">Chunk/Ticket
+	 *      Types</a>
+	 * @implNote Both methods are injected here instead of using the Fabric API
+	 *           listener for {@code onGameJoin} to reduce code complexity. Since
+	 *           {@code onChunkLoadDistance} does not have a Fabric API listener,
+	 *           this {@code class} would still be necessary. Unfortunately,
+	 *           {@code public} fields and methods are disallowed in {@code Mixin}
+	 *           {@code classes}, so the listener would need to be registered
+	 *           elsewhere. As well, an {@code Accessor} and its containing
+	 *           {@code interface} must be created to use {@code chunkLoadDistance}
+	 *           in the listener. Lastly, this method's body would be moved to a
+	 *           helper method to be invoked from both locations. Basically, it is
+	 *           significantly more complicated to use listeners in this case.
+	 *           <p>
+	 *           In vanilla, the {@code min} and {@code max} bounds of
+	 *           {@code RENDER_DISTANCE} are 2 and 32 respectively, but other mods
+	 *           can potentially change this. Thus, both are queried when needed for
+	 *           maximum compatibility.
+	 *           <p>
+	 *           1 is added to {@code chunkLoadDistance} to compensate for
+	 *           differences in how the view distance is used in the server compared
+	 *           to how the client uses {@code RENDER_DISTANCE}. From a few tests,
+	 *           it appears that adding more than 1 to the value results in the fog
+	 *           not properly covering the edge of the loaded chunks.
 	 */
 	@Inject(at = @At("RETURN"), method = { "onChunkLoadDistance", "onGameJoin" })
 	private void onChunkLoadDistanceUpdatePackets(@SuppressWarnings("unused") final CallbackInfo info) {
