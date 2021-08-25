@@ -19,11 +19,27 @@ import net.minecraft.util.math.MathHelper;
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
+	/**
+	 * The view distance of the connected server. Updated only during
+	 * {@link ClientPlayNetworkHandler#onGameJoin onGameJoin}. Shadowed from
+	 * {@link ClientPlayNetworkHandler}.
+	 */
 	@Shadow
 	private int chunkLoadDistance;
+
+	/**
+	 * The currently running {@code MinecraftClient}. Shadowed from
+	 * {@link ClientPlayNetworkHandler}.
+	 */
 	@Shadow
 	@Final
 	private MinecraftClient client;
+
+	/**
+	 * The value of {@link Option#RENDER_DISTANCE} before
+	 * {@link #onChunkLoadDistanceUpdatePackets} is invoked for
+	 * {@link ClientPlayNetworkHandler#onGameJoin onGameJoin}.
+	 */
 	private int previous;
 
 	/**
@@ -39,7 +55,7 @@ public class ClientPlayNetworkHandlerMixin {
 	 * {@link GameOptions#write written} to disk. {@code previous} is reset to 0
 	 * regardless of whether {@code RENDER_DISTANCE} is equal to {@code previous}.
 	 *
-	 * @param info The unused {@linkplain CallbackInfo} required for injects
+	 * @param info The unused {@link CallbackInfo} required for injects
 	 */
 	@Inject(at = @At("RETURN"), method = "clearWorld")
 	private void clearWorld(@SuppressWarnings("unused") final CallbackInfo info) {
@@ -57,23 +73,22 @@ public class ClientPlayNetworkHandlerMixin {
 
 	/**
 	 * Injects into the {@code RETURN} of
-	 * {@linkplain ClientPlayNetworkHandler#onChunkLoadDistance onChunkLoadDistance}
-	 * and {@linkplain ClientPlayNetworkHandler#onGameJoin onGameJoin}.
+	 * {@link ClientPlayNetworkHandler#onChunkLoadDistance onChunkLoadDistance} and
+	 * {@link ClientPlayNetworkHandler#onGameJoin onGameJoin}.
 	 * <p>
-	 * Handles syncing the client's {@linkplain Option#RENDER_DISTANCE
-	 * RENDER_DISTANCE} to the server's view distance, if needed. Nothing is done if
-	 * the client is in singleplayer or {@code RENDER_DISTANCE} is equal to the new
-	 * value.
+	 * Handles syncing the client's {@link Option#RENDER_DISTANCE RENDER_DISTANCE}
+	 * to the server's view distance, if needed. Nothing is done if the client is in
+	 * singleplayer or {@code RENDER_DISTANCE} is equal to the new value.
 	 * <p>
 	 * The {@code min} and {@code max} bounds of {@code RENDER_DISTANCE} are used to
-	 * clamp {@link NSConfig#min} and {@linkplain NSConfig#max}. If the resulting
+	 * clamp {@link NSConfig#min} and {@link NSConfig#max}. If the resulting
 	 * {@code min} is greater than the resulting {@code max}, their values are
 	 * swapped. Lastly, {@code RENDER_DISTANCE} is compared to
 	 * {@code chunkLoadDistance + 1}, clamped by {@code min} and {@code max}.
 	 * {@code previous} is initialized to {@code RENDER_DISTANCE} if it is currently
 	 * uninitialized.
 	 *
-	 * @param info The unused {@linkplain CallbackInfo} required for injects
+	 * @param info The unused {@link CallbackInfo} required for injects
 	 * @see <a href=
 	 *      "https://minecraft.fandom.com/wiki/Chunk#Ticket_types">Chunk/Ticket
 	 *      Types</a>

@@ -12,7 +12,7 @@ public class NSModMenuApiImpl implements ModMenuApi {
 	/**
 	 * Creates the {@link ConfigScreenFactory} needed for a GUI configuration. Uses
 	 * {@link AutoConfig} to construct a default {@code Screen} implementation for
-	 * {@linkplain NSConfig}.
+	 * {@link NSConfig}.
 	 */
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
